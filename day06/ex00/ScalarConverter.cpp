@@ -5,13 +5,11 @@
 ScalarConverter::ScalarConverter(){};
 ScalarConverter::~ScalarConverter(){};
 ScalarConverter::ScalarConverter(const ScalarConverter &obj){
-	*this = obj;
+	(void)obj;
 }
 
 ScalarConverter &ScalarConverter::operator=(const ScalarConverter &other){
-	if (this != &other){
-		*this = other;
-	}
+	(void)other;
 	return (*this);
 }
 
@@ -21,7 +19,7 @@ void	to_int(std::string str){
 
 	std::cout << "int: ";
 	integer = strtod(str.c_str(), &endptr);
-	if (str == "nan" || str == "+inf" || str == "-inf"|| str == "+inff" || str == "-inff")
+	if (pseudo_literal(str))
 		std::cout << "impossible" << std::endl;
 	else
 		std::cout << (static_cast<int>(integer)) << std::endl;

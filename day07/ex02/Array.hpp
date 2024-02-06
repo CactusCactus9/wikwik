@@ -13,13 +13,13 @@ class Array{
 		Array(){
 			_elements = NULL;
 			_size = 0;
-		};
+		}
 		Array(unsigned int n) : _size(n){
 			this->_elements = new T[_size];
 			for (unsigned int i = 0; i < _size; i++){
 				this->_elements[i] = 0;
 			}
-		};
+		}
 		Array(const Array &obj){
 			this->_size = obj._size;
 			this->_elements = new T[obj._size];

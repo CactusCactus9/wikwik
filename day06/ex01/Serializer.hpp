@@ -1,11 +1,9 @@
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
 #include <cstdint>
+#include "Data.hpp"
 #include <string>
 
-typedef struct Data{
-	int			num;
-}Data;
 
 class	Serializer{
 	private:// non initializable
