@@ -4,7 +4,7 @@
 #include <map>
 #include <sstream>
 
-void	split_data(){
+int	split_data(){
 	std::string	line;
 	std::string	date;
 	std::string	value;
@@ -14,19 +14,20 @@ void	split_data(){
 	std::ifstream   myFile("data.csv");
 	if (!myFile.is_open()){
 		std::cerr << "Failed to open the file!" << std::endl;
-		return ;
+		return (0);
 	}
 	if (!getline(myFile, header))
-		return ;
+		return (0);
 	while (getline(myFile, line)){
 		std::istringstream iss(line);//like cin except it reads from string
 		if(!getline(iss, date, ','))
-			return ;
+			return (0);
 		if(!getline(iss, value))
-			return ;
+			return (0);
 		map[date] =value;
 	}
 	myFile.close();
+	return (1);
 	// std::map<std::string, std::string>::iterator	it = map.begin();
 	// while (it != map.end()){
 	// 	std::cout << it->first << " ******* " << it->second << std::endl;
@@ -41,8 +42,28 @@ int	ft_leap(int	year){
 	return (1);
 }
 
+int	check_month(std::string line, size_t i){
+	const char	*str;
+
+	str = line.c_str();
+	if ((str[i] == '0' && (str[i + 1] >= '1' && str[i + 1] <= '9')) || (str[i] == '1'  && (str[i + 1] >= '0' && str[i + 1] <= '2')))
+		return (0);
+	return (1);
+}
+
+int	check_day(std::string line, size_t i){
+	const char	*str;
+
+	str = line.c_str();
+	if ((str[i] == '0' && (str[i + 1] >= '1' && str[i + 1] <= '9')) || ((str[i] == '1' || str[i] == '2')  && (str[i + 1] >= '0' && str[i + 1] <= '9')) || (str[i] == '3'  && (str[i + 1] >= '0' && str[i + 1] <= '1')))
+		return (0);
+	return (1);
+}
 
 void	ft_parsing(std::string line){
+	size_t	occurence;
+
+	occurence = line.find('-');
 	//----allowed charachters----//
 	for (size_t i = 0; i < line.length(); i++){
 		if (line[i] != ' ' && line[i] != '-' && line[i] != '|' && line[i] != '.' && !isdigit(line[i])){
@@ -50,60 +71,60 @@ void	ft_parsing(std::string line){
 		}
 	}
 	//----valid year----//
-	for (size_t i = 0; i < 4; i++){
+	for (size_t i = 0; i < occurence; i++){
 		if (!isdigit(line[i])){
-			std::cerr << "Invalid input2!" << std::endl;
+			std::cerr << "Enter a valid year!" << std::endl;
 		}
 	}
-	//----valid format----//
-	if (line.length() >= 4 && line[4] != '-'){
-		std::cerr << "Invalid input!3" << std::endl;
-	}
+	if (line[0] == '-')
+		std::cout << "Wrong format!" << std::endl;
 	//----valid month----//
-	for (size_t i = 5; i < 7; i++){
-		if (!isdigit(line[i])){
-			std::cerr << "Invalid input4!" << std::endl;
-		}
+	for (size_t i = occurence + 1; i < occurence + 3; i++){
+		if (!isdigit(line[i]))
+			std::cerr << "Enter a valid month!" << std::endl;
 	}
-	//----valid format----//
-	if (line.length() >= 7 && line[7] != '-'){
-		std::cerr << "Invalid input5!" << std::endl;
-	}
+	if (check_month(line, occurence + 1) == 1)
+		std::cout << "Enter a valid month!" << std::endl;
+	
+	if (line[occurence + 3] != '-')
+		std::cout << "Wrong format!" << std::endl;
 	//----valid day----//
-	for (size_t i = 8; i < 10; i++){
-		if (!isdigit(line[i])){
+	for (size_t i = occurence + 4; i < occurence + 6; i++){
+		if (!isdigit(line[i]))
 			std::cerr << "Invalid input6!" << std::endl;
-		}
+	}
+	if (check_day(line, occurence + 4)){
+		std::cout << "Enter a valid day!" << std::endl;
 	}
 	//----valid format----//
-	if (line.length() >= 10 && (line[10] != ' ' && line[10] != '\0')){
+	if (line.length() >= occurence + 6 && (line[occurence + 6] != ' ' && line[occurence + 6] != '\0')){
 		std::cerr << "Invalid input7!" << std::endl;
 	}
-	if (line.length() >= 11 && (line[11] != '|' || line[12] != ' ' || 
-	!isdigit(line[13]) || (line[13] < 0 || atoi(&line[13]) > 1000))){
+	if (line.length() >= occurence + 6 && (line[occurence + 6] != ' ' || line[occurence + 7] != '|' || line[occurence + 8] != ' ' || 
+	!isdigit(line[occurence + 9]) || !isdigit(line[line.length() - 1]) || (atof(&line[occurence + 9]) < 0 || atof(&line[occurence + 9]) > 1000))){
 		std::cerr << "Invalid input8!" << std::endl;
 	}
 	std::cout <<  "line " <<line << std::endl;
 }
 
 void	read_file(char **av){
-std::string	header;
-std::string	line;
-std::string	year;
-std::string	month;
-std::string	day;
-std::string	val;
-int			leap;
+	std::string	header;
+	std::string	line;
+	std::string	year;
+	std::string	month;
+	std::string	day;
+	std::string	val;
+	int			leap;
 
-leap = 3;
-std::ifstream   myFile(av[1]);
-if (!(myFile.is_open())){
+	leap = 3;
+	std::ifstream   myFile(av[1]);
+	if (!(myFile.is_open())){
 		std::cout << "Failed to open the file!" <<std::endl;
 		return ;
 	}
 	if (!getline(myFile, header)){
 		std::cerr << "Failed to read!" << std::endl;
-		return ;
+		return ; 
 	}
 	if (header != "date | value"){
 		std::cout << "Invalid input!" << std::endl;
@@ -119,7 +140,8 @@ if (!(myFile.is_open())){
 			return ;
 		if (!getline(strm, day, ' '))
 			return ;
-		if (leap == 0 && atoi(day.c_str()) != 29)
+			std::cout << "month.c_str() " << month.c_str() << std::endl;
+		if (leap == 0 && atoi(month.c_str()) == 02 && atoi(day.c_str()) > 29)
 			return ;
 			std::cout << "leap" << leap << std::endl;
 	}

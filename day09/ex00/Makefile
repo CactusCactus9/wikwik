@@ -6,7 +6,7 @@ OBJS	= $(SRCS:.cpp=.o)
 
 CXX	 = c++
 
-CXXFLAGS = -Wall -Werror -Wextra  -std=c++11
+CXXFLAGS = -Wall -Werror -Wextra  -std=c++98
 
 %.o: %.cpp BitcoinExchange.hpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
