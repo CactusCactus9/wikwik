@@ -13,6 +13,5 @@ int	main(int ac,char **av){
 		std::cout << "Error! Check the arguments!" << std::endl;
 		return (1);
 	}
-	map = split_data();
 	read_file(av);
 }
