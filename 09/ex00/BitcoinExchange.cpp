@@ -45,11 +45,11 @@ std::map<std::string, std::string>	split_data(){
 		map.insert(std::make_pair(date, value));
 	}
 	myFile.close();
-	std::map<std::string, std::string>::iterator	it = map.begin();
-	while (it != map.end()){
-		std::cout << it->first << " ******* " << it->second << std::endl;
-		++it;
-	}
+	// std::map<std::string, std::string>::iterator	it = map.begin();
+	// while (it != map.end()){
+	// 	std::cout << it->first << " ******* " << it->second << std::endl;
+	// 	++it;
+	// }
 	return (map);
 }
 //duplicate dates override
@@ -127,7 +127,6 @@ void	ft_parsing(std::string line){
 	!isdigit(line[occurence + 9]) || !isdigit(line[line.length() - 1]) || (atof(&line[occurence + 9]) < 0 || atof(&line[occurence + 9]) > 1000))){
 		std::cerr << "Invalid input8!" << std::endl;
 	}
-	// std::cout <<  "line " <<line << std::endl;
 }
 
 void	read_file(char **av){
@@ -135,14 +134,19 @@ void	read_file(char **av){
 	std::string		line;
 	std::string		date;
 	std::string		val;
-	unsigned int	y;
-	unsigned int	m;
-	unsigned int	d;
-	unsigned int	v;
-	char			dash;
-	int				leap;
+	// unsigned int	y;
+	// unsigned int	m;
+	// unsigned int	d;
+	float	v;
+	// char			dash;
+	// int				leap;
+	size_t	m_y;
+	size_t	m_m;
+	size_t	m_d;
+	float			m_v;
+	char 			m_dash;
 
-	leap = 3;
+	// leap = 3;
 	std::ifstream   myFile(av[1]);
 	if (!(myFile.is_open())){
 		std::cout << "Failed to open the file!" <<std::endl;
@@ -166,17 +170,42 @@ void	read_file(char **av){
 		}
 		if (!getline(strm, val, '|')){
 			std::cout << "Failed to get the value!" << std::endl;
+			std::cout << date << std::endl;
+			
 			return ;
 		}
 		//--get int values----//
-		std::istringstream	newstrm(date);
-		newstrm >> y >> dash >> m >> dash >> d;
+		// std::istringstream	newstrm(date);
+		// newstrm >> y >> dash >> m >> dash >> d;
 		std::stringstream	nstrm(val);
 		nstrm >> v;
-		leap = ft_leap(y);
-		if (leap == 0 && m == 02 && d > 29)
-			std::cout << "Error!" << std::endl;
-		
+		// leap = ft_leap(y);
+		// if (leap == 0 && m == 02 && d > 29)
+		// 	std::cout << "Error!" << std::endl;
+		std::map<std::string, std::string>	map;
+		map = split_data();
+		std::string	tmp = date.substr(0, date.size() - 1);
+		std::map<std::string, std::string>::iterator	it = map.lower_bound(tmp);
+		if (it != map.end()){
+			//--map elements to int----//
+			std::istringstream	newstrm(it->first);
+			newstrm >> m_y >> m_dash >> m_m >> m_dash >> m_d;
+			std::stringstream	nstrm(it->second);
+			nstrm >> m_v;
+			if (date == it->first){
+				std::cout << "right output: " << date << " => " << val << " = " << (m_v * v) << std::endl;
+				std::cout << " output: " << it->first << " => " << it->second << std::endl;
+			}
+			else{
+				--it;
+				if (it != map.end()){
+				std::cout << "right output: " << date << " => " << val << " = " << (m_v * v) << std::endl;
+				std::cout << " outpu t: " << it->first << " => " << it->second << std::endl;
+				}
+			}
+		}
+			else
+				std::cout << "date not found" << std::endl;
 	}
 	myFile.close();
 }
