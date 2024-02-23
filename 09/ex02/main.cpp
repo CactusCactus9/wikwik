@@ -1,5 +1,13 @@
 #include "PmergeMe.hpp"
+#include <algorithm>
 
+typedef std::pair<int, int> Pair;
+
+struct CompareFirst {
+    bool operator()(const Pair& a, const Pair& b) const {
+        return a.first < b.first;
+    }
+};
 
 int	main(int ac, char **av){
 	std::vector<std::pair<int, int> >	pairs;
@@ -19,7 +27,7 @@ int	main(int ac, char **av){
 			if ((ac - 1) % 2 != 0)
 				temp = atoi(av[ac - 1]);
 			//----merge sort----//
-			
+			std::stable_sort(pairs.begin(), pairs.end(), CompareFirst());
 			 for (size_t i = 0; i < pairs.size(); ++i) {
         std::cout << "Pair " << i + 1 << ": "
                   << pairs[i].first << ", " << pairs[i].second << std::endl;}
