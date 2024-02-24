@@ -28,7 +28,7 @@ void	ft_parsing(std::string str){
 				continue ;
 			}
 			else{
-				if (s.size() == 2){
+				if (s.size() >= 2){
 					int a = s.top();
 					s.pop();
 					int b = s.top();
