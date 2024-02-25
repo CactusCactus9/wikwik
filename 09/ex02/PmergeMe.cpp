@@ -39,15 +39,15 @@ void	merge(std::vector<Pair> &vec, int left, int mid, int right){
     //               << vec[i].first << ", " << vec[i].second << std::endl;}
 }
 
-//----Mege sort----//
-// void	mergeSort(std::vector<Pair> vec, int left, int right){
-// 	if (left < right){
-// 		int	mid = left + (right - left) / 2;
-// 		mergeSort(vec, left, mid);
-// 		mergeSort(vec, mid + 1, right);
-// 		merge(vec, left, mid, right);
-// 	}
-// }
+void	mergeSort(std::vector<Pair> &vec, int left, int right){
+	if (left < right){
+		int	mid = left + (right - left) / 2;
+		mergeSort(vec, left, mid);
+		mergeSort(vec, mid + 1, right);
+		merge(vec, left, mid, right);
+	}
+}
+
 std::vector<int>	jacobsthal_index(int n){
 	std::vector<int>	vec(n);
 
@@ -64,15 +64,4 @@ std::vector<int>	jacobsthal_index(int n){
 // 	for (int i = 3; i < size; ++i){
 		
 // 	}
-// }
-// Merge sort function for pairs
-// void mergeSort(std::vector<Pair>& vec, int left, int right) {
-//     if (left < right) {
-//         int mid = left + (right - left) / 2;
-
-//         mergeSort(vec, left, mid);
-//         mergeSort(vec, mid + 1, right);
-
-//         merge(vec, left, mid, right);
-//     }
 // }
