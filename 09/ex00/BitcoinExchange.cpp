@@ -15,7 +15,7 @@ std::map<std::string, std::string>	split_data(){
 	std::ifstream   myFile("data.csv");
 	if (!myFile.is_open()){
 		throw ("Failed to open the file!");
-	}
+	} 
 	if (!getline(myFile, header)){
 		throw ("Failed to read the line!");
 	}
@@ -187,7 +187,7 @@ void	read_file(char **av){
 				std::stringstream	nstr(it->second);
 				nstr >> m_v;
 				if (!map.empty()){
-					std::cout << date << " => " << val << " = " << (m_v * v) << std::endl;
+					std::cout << date << " => " << val << " = " << v << std::endl;
 				}
 				else
 					throw ("Empty data!");
