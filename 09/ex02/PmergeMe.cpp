@@ -34,9 +34,6 @@ void	merge(std::vector<Pair> &vec, int left, int mid, int right){
 		vec[k++] = l_part[i++];
 	while (j < size2)
 		vec[k++] = r_part[j++];
-	// for (int i = 0; i < vec.size(); ++i) {
-	// std::cout << "Pair " << i + 1 << ": "
-    //               << vec[i].first << ", " << vec[i].second << std::endl;}
 }
 
 void	mergeSort(std::vector<Pair> &vec, int left, int right){
@@ -59,9 +56,41 @@ std::vector<int>	jacobsthal_index(int n){
 	return vec;
 }
 
-// std::vector<int>	ft_inset(std::vector<int> main, std::vector<int> pend, int size){
-// 	std::vector<int>	js = jacobsthal_index(size);
-// 	for (int i = 3; i < size; ++i){
-		
-// 	}
-// }
+std::vector<int>	insert_pend(std::vector<Pair> pairs, int temp){
+	std::vector<int>::iterator	it;
+	std::vector<int>			firsts;
+	std::vector<int>			seconds;
+	int							fsize;
+
+	//firsts
+	firsts.push_back(pairs[0].second);
+	firsts.push_back(pairs[0].first);
+	for (size_t i = 1; i < pairs.size(); ++i)
+		firsts.push_back(pairs[i].first);
+	//seconds
+	for (size_t i = 0; i < pairs.size(); ++i)
+		seconds.push_back(pairs[i].second);
+	fsize = firsts.size();
+	std::vector<int>	js = jacobsthal_index(seconds.size());
+		int	n_j = js[1];
+		int	o_j = 1;
+	for(size_t i = 1; i < seconds.size() +1; ++i){
+		if (js[i] > (int)seconds.size())
+			n_j = (int)seconds.size();
+		else
+			n_j = js[i];
+		o_j = js[i - 1];
+		int	insert_size = n_j + o_j - 1;
+		while (n_j > o_j){
+			it = std::lower_bound(firsts.begin(), firsts.begin() + insert_size, seconds[n_j - 1]);
+			firsts.insert(it, seconds[n_j - 1]);
+			n_j--;
+			fsize++;
+		}
+	}
+	if (temp){
+		it = std::lower_bound(firsts.begin(), firsts.end(), temp);
+		firsts.insert(it, temp);
+	}
+	return (firsts);
+}
