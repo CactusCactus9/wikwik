@@ -93,12 +93,12 @@ std::vector<int>	v_insert_pend(std::vector<Pair> pairs, int temp){
 }
 
 //----deque----//
-void	d_merge(std::deque<Paired> &deq, int left, int mid, int right){
+void	d_merge(std::deque<Pair> &deq, int left, int mid, int right){
 	int	size1 = mid  - left + 1;
 	int	size2 = right - mid;
 
-	std::deque<Paired>	l_part(size1);
-	std::deque<Paired>	r_part(size2);
+	std::deque<Pair>	l_part(size1);
+	std::deque<Pair>	r_part(size2);
 
 	for (int i = 0; i < size1; ++i){
 		l_part[i] = deq[left + i];
@@ -118,7 +118,7 @@ void	d_merge(std::deque<Paired> &deq, int left, int mid, int right){
 		deq[k++] = r_part[j++];
 }
 
-void	d_mergeSort(std::deque<Paired> &deq, int left, int right){
+void	d_mergeSort(std::deque<Pair> &deq, int left, int right){
 	if (left < right){
 		int	mid = left + (right - left) / 2;
 		d_mergeSort(deq, left, mid);
@@ -138,7 +138,7 @@ std::deque<size_t>	d_jacobsthal_index(int n){
 	return deq;
 }
 
-std::deque<int>	d_insert_pend(std::deque<Paired> pairs, int temp){
+std::deque<int>	d_insert_pend(std::deque<Pair> pairs, int temp){
 	std::deque<int>::iterator	it;
 	std::deque<int>			firsts;
 	std::deque<int>			seconds;
@@ -151,7 +151,6 @@ std::deque<int>	d_insert_pend(std::deque<Paired> pairs, int temp){
 	//seconds
 	for (size_t i = 0; i < pairs.size(); ++i)
 		seconds.push_back(pairs[i].second);
-	// fsize = firsts.size();
 	std::deque<size_t>	js = d_jacobsthal_index(seconds.size());
 	size_t	n_j = js[1];
 	size_t	o_j = 1;
@@ -169,8 +168,6 @@ std::deque<int>	d_insert_pend(std::deque<Paired> pairs, int temp){
 			n_j--;
 		}
 	}
-	// if (std::is_sorted(firsts.begin(), firsts.end()))
-	// 	std::cout << "sorted\n";
 	if (temp){
 		it = std::lower_bound(firsts.begin(), firsts.end(), temp);
 		firsts.insert(it, temp);

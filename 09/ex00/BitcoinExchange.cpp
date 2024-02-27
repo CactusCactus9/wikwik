@@ -5,12 +5,11 @@
 #include <sstream>
 
 std::map<std::string, std::string>	split_data(){
-	std::string	line;
-	std::string	date;
-	std::string	value;
-	std::string	header;
-
-	std::map<std::string, std::string> map;
+	std::string							line;
+	std::string							date;
+	std::string							value;
+	std::string							header;
+	std::map<std::string, std::string>	map;
 
 	std::ifstream   myFile("data.csv");
 	if (!myFile.is_open()){
@@ -28,6 +27,10 @@ std::map<std::string, std::string>	split_data(){
 		map.insert(std::make_pair(date, value));//to avoid overriding same values
 	}
 	myFile.close();
+	
+	// for (std::map<std::string, std::string>::iterator	it = map.begin(); it != map.end(); ++it){
+	// 	std::cout << "map " << it->first << it->second << std::endl;
+	// }
 	return (map);
 }
 
@@ -64,9 +67,9 @@ void	ft_parsing(std::string line){
 	//----allowed charachters----//
 	for (size_t i = 0; i < line.length(); i++){
 		if (line[i] != ' ' && line[i] != '-' && line[i] != '|' && line[i] != '.' && !isdigit(line[i]))
-			throw ("Invalid input1!");
+			throw ("Invalid date format!");
 	}
-	//----valid year----//is year 0 valid?
+	//----valid year----//
 	for (size_t i = 0; i < occurence; i++){
 		if (!isdigit(line[i]))
 			throw ("Enter a valid year!");
@@ -86,17 +89,17 @@ void	ft_parsing(std::string line){
 	//----valid day----//
 	for (size_t i = occurence + 4; i < occurence + 6; i++){
 		if (!isdigit(line[i]))
-			throw ("Invalid input6!");
+			throw ("Invalid day format!");
 	}
 	if (check_day(line, occurence + 4)){
 		throw ("Enter a valid day!");
 	}
 	//----valid format----//
 	if (line.length() >= occurence + 6 && (line[occurence + 6] != ' ' && line[occurence + 6] != '\0')){
-		throw ( "Invalid input7!");
+		throw ( "Invalid format!");
 	}
 	if (line.length() >= occurence + 6 && (line[occurence + 6] != ' ' || line[occurence + 7] != '|' || line[occurence + 8] != ' '))
-		throw ("Invalid input8!");
+		throw ("Invalid input!");
 	//----valid value----//
 	for (size_t i = line.length() - 1; i > occurence + 8; i--){
 		if (line[i] == '.' && line[i - 1] == '.')
@@ -107,21 +110,21 @@ void	ft_parsing(std::string line){
 }
 
 void	read_file(char **av){
-	std::string		header;
-	std::string		line;
-	std::string		date;
-	std::string		val;
-	unsigned int	y;
-	unsigned int	m;
-	unsigned int	d;
-	size_t			v;
-	char			dash;
-	int				leap;
-	size_t			m_y;
-	size_t			m_m;
-	size_t			m_d;
-	size_t			m_v;
-	char 			m_dash;
+	std::string							header;
+	std::string							line;
+	std::string							date;
+	std::string							val;
+	unsigned int						y;
+	unsigned int						m;
+	unsigned int						d;
+	char								dash;
+	char 								m_dash;
+	int									leap;
+	float								v;
+	size_t								m_y;
+	size_t								m_m;
+	size_t								m_d;
+	float								m_v;
 	std::map<std::string, std::string>	map;
 
 	// leap = 3;
@@ -131,13 +134,13 @@ void	read_file(char **av){
 		return ;
 	}
 	if (!getline(myFile, header)){
-		myFile.close();
 		std::cerr << ("Failed to read first line!") << std::endl;
+		myFile.close();
 		return ;
 	}
 	if (header != "date | value"){
+		std::cerr << "Invalid line!" << std::endl;
 		myFile.close();
-		std::cerr << "Invalid input!" << std::endl;
 		return ;
 	}
 	while (getline(myFile, line)){
@@ -146,12 +149,12 @@ void	read_file(char **av){
 			std::istringstream	strm(line);
 			
 			if (!getline(strm, date, '|')){
-				myFile.close();
 				std::cerr <<("Failed to get the date!") << std::endl;
+				myFile.close();
 			}
 			if (!getline(strm, val)){
-				myFile.close();
 				std::cerr<< ("Failed to get the value!") << std::endl;
+				myFile.close();
 			}
 			//--get int values----//
 			std::istringstream	newstrm(date);
@@ -162,7 +165,7 @@ void	read_file(char **av){
 			if (leap == 0 && m == 02 && d > 29)
 				throw ("leap year can't depass 29 days!");
 			if (leap == 1 && m == 02 && d > 28)
-				throw ("Non leap year can't depass 28 days!");
+				throw ("Leap year can't depass 28 days!");
 			if (leap == 1 && (m == 04 || m == 06 || m == 9 || m == 11) && d > 30)
 				throw ("This month can't depass 30 days!");
 			std::string	tmp = date.substr(0, date.size() - 1);
@@ -170,7 +173,7 @@ void	read_file(char **av){
 			map = split_data();
 			std::map<std::string, std::string>::iterator	it = map.lower_bound(tmp);
 			if (it != map.end()){
-				if (tmp != it->first)
+				if (tmp != it->first && it != map.begin())
 					--it;
 				//--map elements to int----//
 				std::istringstream	newstrm(it->first);
@@ -184,10 +187,11 @@ void	read_file(char **av){
 				//--map elements to int----//
 				std::istringstream	newstr(it->first);
 				newstr >> m_y >> m_dash >> m_m >> m_dash >> m_d;
+				// std::cout << "map date :" << m_y << " " << m_m << " " << m_d << std::endl;
 				std::stringstream	nstr(it->second);
 				nstr >> m_v;
 				if (!map.empty()){
-					std::cout << date << " => " << val << " = " << v << std::endl;
+					std::cout << date << " => " << val << " = " << (m_v * v) << std::endl;
 				}
 				else
 					throw ("Empty data!");
